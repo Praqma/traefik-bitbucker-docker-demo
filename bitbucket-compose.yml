@@ -27,5 +27,9 @@ services:
     volumes:
       - data:/var/atlassian/application-data/bitbucket
     restart: unless-stopped
+    stop_grace_period: 60s
+    depends_on: 
+     - postgres
+     - traefik
 volumes:
   data: {}
