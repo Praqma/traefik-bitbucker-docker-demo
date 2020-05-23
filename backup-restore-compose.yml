@@ -1,0 +1,25 @@
+version: '3.3'
+services:
+  backup:
+    image: postgres:9.5-alpine
+    container_name: backup-bitbucket
+    environment:
+      POSTGRES_DB: ${BITBUCKET_DB:-bitbucket}
+      POSTGRES_USER: ${BITBUCKET_DB_USER:-bitbucket}
+      POSTGRES_PASSWORD: ${BITBUCKET_DB_PASSWORD:-""}
+    volumes:
+      - bitbucket_data:/bitbucket_data
+      - bitbucket_db:/var/lib/postgresql/data
+      - .:/host
+    restart: "no"
+    stop_grace_period: 60s
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
+volumes:
+  bitbucket_data:
+    external: true
+  bitbucket_db:
+    external: true
