@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   postgres:
-    image: postgres:11-alpine
+    image: postgres:9.5-alpine
     container_name: postgres-bitbucket
     ports:
       - ${BITBUCKET_DB_PORT}:5432
@@ -12,6 +12,7 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
     restart: unless-stopped
+    stop_grace_period: 60s
     ulimits:
       nproc: 65535
       nofile:
