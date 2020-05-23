@@ -27,7 +27,9 @@ Traefik proxies:
 
 ## Run
 
-`docker-compose -f traefik-compose.yml -f postrges-compose.yml -f bitbucket-compose.yml up -d`
+`docker-compose up -d`
+
+* Container restart policies are set to `unless-stopped` so they will be restarted on a reboot unless specifically stopped.
 
 ## Access
 * Traefik Dashboard: http://localhost:8080
@@ -35,5 +37,17 @@ Traefik proxies:
 
 ![Bitbucket](bitbucket.png)
 
-## Upgrade process
-See the `notes.txt` file for a description of a simple upgrade process.
+## Backup
+Run `./backup-restore.sh -b`.
+
+This will produce **two time stamped** files in a sub-directory called `backup`. 
+
+* `<TIMESTAMP>-bitbucket-db.bin` which is produced by pg_dump.
+* `<TIMESTAMP>-bitbucket-data.tgz` which is just compressed tarball of Bitbuckets home directory.
+* If the containers were running when the backup ws executed they will be restarted. 
+
+## Restore
+Run `./backup-restore.sh -r -t backup/<TIMESTAMP>-bitbucket-data.tgz -d backup/<TIMESTAMP>-bitbucket-db.bin`
+
+* A Fresh backup will be done prior to restoring from the backup files for rollback purposes.
+* If the containers were running when the backup ws executed they will be restarted. 
