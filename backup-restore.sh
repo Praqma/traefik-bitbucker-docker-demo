@@ -69,7 +69,7 @@ restore() {
 
 OPTIND=1
 
-while getopts 'brb:d:t:' opt; do
+while getopts 'hrb:d:t:' opt; do
     case $opt in
         h)
             show_help
