@@ -144,7 +144,7 @@ if [ $RESTORE == 1 ]; then
             exit 0
         ;;
         *)
-            echo "you must answer Y|y|es or N|n|o."
+            echo "You must answer [Y|y] or [N|n]."
             exit 1
         ;;
     esac
