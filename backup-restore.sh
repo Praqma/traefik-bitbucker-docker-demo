@@ -1,8 +1,6 @@
 #!/bin/sh
 
-set -e
-set -u
-set -o pipefail
+set -euo pipefail
 
 BACKUP=0
 RESTORE=0
@@ -69,7 +67,7 @@ restore() {
 
 OPTIND=1
 
-while getopts 'hrb:d:t:' opt; do
+while getopts 'd:t:rbh' opt; do
     case $opt in
         h)
             show_help
@@ -111,6 +109,10 @@ shift "$((OPTIND-1))"   # Discard the options and sentinel --
 
 if [[ $RESTORE == 1 && $BACKUP == 1 ]]; then
     echo "You can only specify -b OR -r"
+    show_help
+    exit 1
+elif [[ $RESTORE == 1 && ( ! $TAR && ! $DB ) ]]; then
+    echo "You must provide something to restore! Exiting..."
     show_help
     exit 1
 fi
