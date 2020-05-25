@@ -129,7 +129,7 @@ if [ $RESTORE == 1 ]; then
         [Y|y]:[N|n] : " ANSWER
     else
         read -p "Restore the following. 
-        Database bin file: ${DB} 
+        Database SQL file: ${DB} 
         Data directory .tgz file: ${TAR}
 
         A fresh BACKUP will be done prior to a restore.
