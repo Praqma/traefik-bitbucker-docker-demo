@@ -36,7 +36,7 @@ backup() {
     echo "Backing up Bitbucket data directory..."
     docker exec backup-bitbucket sh -c "cd /bitbucket_data && mkdir -p /host/backup/ && tar czf /host/backup/${DATE}-bitbucket-data.tgz ."
     echo "Backing up database with pg_dump..."
-    docker exec backup-bitbucket sh -c "pg_dump --username bitbucket --format=c --dbname=bitbucket --file=/host/backup/${DATE}-bitbucket-db.bin"
+    docker exec backup-bitbucket sh -c "pg_dump --username bitbucket --format=p --dbname=bitbucket --file=/host/backup/${DATE}-bitbucket-db.sql"
     docker-compose -f backup-restore-compose.yml down --timeout 30 > /dev/null 2>&1
 
     # If it was running AND this is a BACKUP operation bring it back to previous state. 
@@ -52,7 +52,7 @@ restore() {
     docker-compose -f backup-restore-compose.yml up -d > /dev/null 2>&1
     if [ "${DB}" ]; then
         echo "Restoring database with ${DB}"
-        docker exec -it backup-bitbucket sh -c "pg_restore --clean --no-acl --no-owner -d bitbucket -U bitbucket /host/backup/${DB}"
+        docker exec -it backup-bitbucket sh -c "psql -U bitbucket -d bitbucket < /host/backup/${DB}"
     fi
     if [ "${TAR}" ]; then
         echo "Restoring data directory with ${TAR}"
@@ -83,8 +83,8 @@ while getopts 'd:t:rbh' opt; do
             if [ ! -f "${OPTARG}" ]; then
                 echo "The file ${OPTARG} does not seem to exist! Exiting..."
                 exit 1
-            elif [ ! "${OPTARG##*.}" == "bin" ]; then
-                echo "This doesn't look like a .bin file! Exiting..."
+            elif [ ! "${OPTARG##*.}" == "sql" ]; then
+                echo "This doesn't look like a .sql file! Exiting..."
                 exit 1
             fi
             DB="${OPTARG##*/}"
@@ -122,7 +122,7 @@ if [ $RESTORE == 1 ]; then
     echo "-----------------------------------------------------"
     if [[ ! "${DB}" || ! "${TAR}" ]]; then
         read -p "This looks like a partial restore! Are you SURE?
-        Database bin file: ${DB} 
+        Database SQL file: ${DB} 
         Data directory .tgz file: ${TAR}
 
         A fresh BACKUP will be done prior to a restore.
