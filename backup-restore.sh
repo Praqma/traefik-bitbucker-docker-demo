@@ -11,12 +11,12 @@ RESTART=0
 # Usage info
 show_help() {
 cat << EOF
-Usage: ${0##*/} [-h] [-r|-b backup or restore. Mutually exclusive.] [-d db-backup.bin file] [-t data-backup.tgz]...
+Usage: ${0##*/} [-h] [-r|-b backup or restore. Mutually exclusive.] [-d db-backup.sql file] [-t data-backup.tgz]...
   
   -h                Display this help and exit 0.
   -b                A backup operation.
   -r                A restore operation. 
-  -d <NAME>         The database .bin file to restore.
+  -d <NAME>         The database .sql file to restore.
   -t <NAME>         The file system .tgz file to restore.
 
 EOF

@@ -42,12 +42,12 @@ Run `./backup-restore.sh -b`.
 
 This will produce **two time stamped** files in a sub-directory called `backup`. 
 
-* `<TIMESTAMP>-bitbucket-db.bin` which is produced by pg_dump.
+* `<TIMESTAMP>-bitbucket-db.sql` which is produced by pg_dump.
 * `<TIMESTAMP>-bitbucket-data.tgz` which is just compressed tarball of Bitbuckets home directory.
 * If the containers were running when the backup was executed they will be restarted. 
 
 ## Restore
-Run `./backup-restore.sh -r -t backup/<TIMESTAMP>-bitbucket-data.tgz -d backup/<TIMESTAMP>-bitbucket-db.bin`
+Run `./backup-restore.sh -r -t backup/<TIMESTAMP>-bitbucket-data.tgz -d backup/<TIMESTAMP>-bitbucket-db.sql`
 
 * A Fresh backup will be done prior to restoring for rollback purposes.
 * If the containers were running when the restore was executed they will be restarted.
